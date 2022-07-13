@@ -27,13 +27,14 @@ class FieldServiceProvider extends PackageServiceProvider
 
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'nova-language-tool');
 
-        $lang = request('lang', request()->header('lang'));
 
-        if ($lang) {
-            app()->setLocale($lang);
-        }
+        Nova::serving(function () {            
+            $lang = request('lang', request()->header('lang'));
 
-        Nova::serving(function () {
+            if ($lang) {
+                app()->setLocale($lang);
+            }
+            
             Nova::provideToScript(['locals' => MultilingualHelper::getSupportLocales(), 'currentLocal' => App::getLocale()]);
             Nova::script('multilingual-nova', __DIR__ . '/../dist/js/field.js');
             Nova::style('multilingual-nova', __DIR__ . '/../dist/css/field.css');
